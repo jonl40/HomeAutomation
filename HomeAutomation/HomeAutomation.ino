@@ -3,9 +3,12 @@
 #define ENABLE 5
 #define DIRA 3
 #define DIRB 4
+#define LIGHT_SENSOR A0
+#define LED_PIN 9
 
 static const int DHT_SENSOR_PIN = 2;
-float TEMPERATURE_THRESHOLD = 25.0;
+float TEMPERATURE_THRESHOLD = 27.0;
+int LIGHT_THRESHOLD = 50;
 DHT_nonblocking dht_sensor( DHT_SENSOR_PIN, DHT_SENSOR_TYPE );
 
 void setup() {
@@ -18,9 +21,11 @@ void setup() {
 void loop() {
   float temperature;
   float humidity;
+  int light_level; 
 
   DisplayTemp(&temperature, &humidity);
-  Controller(temperature, humidity);
+  DetectLight(&light_level);
+  Controller(temperature, humidity, light_level);
   
 }
 
@@ -73,14 +78,30 @@ void DisplayTemp(float *temperature, float *humidity)
   }
 }
 
-void Controller(float temperature, float humidity)
+void DetectLight(int *light_level)
 {
-  if(temperature > TEMPERATURE_THRESHOLD)
+  *light_level = analogRead(LIGHT_SENSOR);
+  //Serial.print( "Light Level = " );
+  //Serial.println(*light_level);
+  //delay(1000);
+}
+
+void Controller(float temperature, float humidity, int light_level)
+{
+  if(temperature >= TEMPERATURE_THRESHOLD)
   {
     FanOn();
   }
-  else
+  if(temperature < TEMPERATURE_THRESHOLD)
   {
     FanOff();
+  }
+  if(light_level <= LIGHT_THRESHOLD)
+  {
+    digitalWrite(LED_PIN, HIGH);
+  }
+  if(light_level > LIGHT_THRESHOLD)
+  {
+    digitalWrite(LED_PIN, LOW);
   }
 }
