@@ -15,22 +15,12 @@ void setup() {
   Serial.begin(9600);
 }
 void loop() {
-  //FanOn();
-  //FanOff();
-
   float temperature;
   float humidity;
-
-  /* Measure temperature and humidity.  If the functions returns
-     true, then a measurement is available. */
-  if( measure_environment( &temperature, &humidity ) == true )
-  {
-    Serial.print( "T = " );
-    Serial.print( temperature, 1 );
-    Serial.print( " deg. C, H = " );
-    Serial.print( humidity, 1 );
-    Serial.println( "%" );
-  }
+  //FanOn();
+  //FanOff();
+  DisplayTemp(&temperature, &humidity);
+  Controller(temperature, humidity);
   
 }
 
@@ -67,4 +57,30 @@ static bool measure_environment( float *temperature, float *humidity )
   }
 
   return( false );
+}
+
+void DisplayTemp(float *temperature, float *humidity)
+{
+    /* Measure temperature and humidity.  If the functions returns
+   true, then a measurement is available. */
+  if( measure_environment( temperature, humidity ) == true )
+  {
+    Serial.print( "T = " );
+    Serial.print( *temperature, 1 );
+    Serial.print( " deg. C, H = " );
+    Serial.print( *humidity, 1 );
+    Serial.println( "%" );
+  }
+}
+
+void Controller(float temperature, float humidity)
+{
+  if(temperature > 27.0)
+  {
+    FanOn();
+  }
+  else
+  {
+    FanOff();
+  }
 }
