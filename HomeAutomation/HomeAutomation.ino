@@ -5,6 +5,7 @@
 #define DIRB 4
 
 static const int DHT_SENSOR_PIN = 2;
+float TEMPERATURE_THRESHOLD = 25.0;
 DHT_nonblocking dht_sensor( DHT_SENSOR_PIN, DHT_SENSOR_TYPE );
 
 void setup() {
@@ -17,8 +18,7 @@ void setup() {
 void loop() {
   float temperature;
   float humidity;
-  //FanOn();
-  //FanOff();
+
   DisplayTemp(&temperature, &humidity);
   Controller(temperature, humidity);
   
@@ -75,7 +75,7 @@ void DisplayTemp(float *temperature, float *humidity)
 
 void Controller(float temperature, float humidity)
 {
-  if(temperature > 27.0)
+  if(temperature > TEMPERATURE_THRESHOLD)
   {
     FanOn();
   }
