@@ -23,7 +23,7 @@ void loop() {
   float humidity;
   int light_level; 
 
-  DisplayTemp(&temperature, &humidity);
+  GetTemp(&temperature, &humidity);
   DetectLight(&light_level);
   Controller(temperature, humidity, light_level);
   
@@ -64,7 +64,7 @@ static bool measure_environment( float *temperature, float *humidity )
   return( false );
 }
 
-void DisplayTemp(float *temperature, float *humidity)
+void GetTemp(float *temperature, float *humidity)
 {
     /* Measure temperature and humidity.  If the functions returns
    true, then a measurement is available. */
@@ -92,15 +92,16 @@ void Controller(float temperature, float humidity, int light_level)
   {
     FanOn();
   }
-  if(temperature < TEMPERATURE_THRESHOLD)
+  else if(temperature < TEMPERATURE_THRESHOLD)
   {
     FanOff();
   }
+  
   if(light_level <= LIGHT_THRESHOLD)
   {
     digitalWrite(LED_PIN, HIGH);
   }
-  if(light_level > LIGHT_THRESHOLD)
+  else if(light_level > LIGHT_THRESHOLD)
   {
     digitalWrite(LED_PIN, LOW);
   }
