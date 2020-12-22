@@ -7,7 +7,7 @@
 #define LED_PIN 9
 
 static const int DHT_SENSOR_PIN = 2;
-float TEMPERATURE_THRESHOLD = 27.0;
+float TEMPERATURE_THRESHOLD = 32.0;
 int LIGHT_THRESHOLD = 50;
 DHT_nonblocking dht_sensor( DHT_SENSOR_PIN, DHT_SENSOR_TYPE );
 
@@ -49,8 +49,7 @@ void FanOff()
  */
 static bool measure_environment( float *temperature, float *humidity )
 {
-  static unsigned long measurement_timestamp = millis( );
-
+  static unsigned long measurement_timestamp = millis();
   /* Measure once every four seconds. */
   if( millis( ) - measurement_timestamp > 3000ul )
   {
@@ -81,9 +80,6 @@ void GetTemp(float *temperature, float *humidity)
 void DetectLight(int *light_level)
 {
   *light_level = analogRead(LIGHT_SENSOR);
-  //Serial.print( "Light Level = " );
-  //Serial.println(*light_level);
-  //delay(1000);
 }
 
 void Controller(float temperature, float humidity, int light_level)
